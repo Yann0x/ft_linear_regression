@@ -1,11 +1,12 @@
 import json
+import sys
 
 
 def estimate_price(theta0, theta1, km):
     return theta0 + (theta1 * km)
 
 
-def load_thetas(filename):
+def load_thetas(filename="model.json"):
     try:
         with open(filename, "r") as f:
             data = json.load(f)
@@ -21,6 +22,7 @@ def load_thetas(filename):
 
 
 def main():
+    model_file = sys.argv[1] if len(sys.argv) > 1 else "model.json"
     try:
         mileage = int(input("Please enter a mileage: "))
     except ValueError:
@@ -29,9 +31,9 @@ def main():
     if mileage < 0:
         print("Error: mileage cannot be negative")
         return
-    t0, t1 = load_thetas("src/model.json")
+    t0, t1 = load_thetas(model_file)
     price = round(estimate_price(t0, t1, mileage))
-    if price <= 0:
+    if price < 0:
         print("This car is not worth selling")
     else:
         print(f"The estimated price of your car is : {price}")
